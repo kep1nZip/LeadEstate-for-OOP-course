@@ -26,7 +26,7 @@ Fitur utama sistem ini meliputi:
 
 ## DFD Level 0 (Context Diagram)
 
-![DFD Level 0](assets/dfd0.png)
+![DFD Level 0](assets/dfdlv0.jfif)
 
 Diagram konteks yang menggambarkan interaksi antara pengguna eksternal seperti Admin dan Sales dengan sistem LeadEstate.
 
