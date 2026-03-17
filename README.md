@@ -26,7 +26,7 @@ Fitur utama sistem ini meliputi:
 
 ## DFD Level 0 (Context Diagram)
 
-Diagram konteks yang menggambarkan interaksi antara pengguna eksternal seperti Admin dan Sales dengan sistem LeadEstate.
+Diagram konteks yang menggambarkan alur dari sistem follow up & reminder secara garis besar
 
 ![DFD Level 0](assets/dfdlv0.jfif)
 
@@ -34,28 +34,9 @@ Diagram konteks yang menggambarkan interaksi antara pengguna eksternal seperti A
 
 ## DFD Level 1
 
-Diagram ini menjelaskan proses utama dalam sistem seperti:
+Diagram konteks yang menggambarkan interaksi antara pengguna eksternal seperti Admin dan Sales dengan sistem “LeadEstate”
 
-1. Management Data Lead
-
-![DFD Level 1 Management Data Dead](assets/dfdlv1-management-data-lead.jfif)
-
-
-2. Management Database
-
-![DFD Level 1 Management Database](assets/dfdlv1-management-database.jfif)
-
-
-3. Sistem Reminder dan Follow-Up
-![DFD Level 1 Sistem Reminder dan Follow-Up](assets/dfdlv1-sistem-reminder-n-foll-up.jfif)
-
-
-4. Update Status Lead
-![DFD Level 1 Update Status Lead](assets/dfdlv1-update-status-lead.jfif)
-
-
-5. Laporan & Closing Rate
-![DFD Level 1 Laporan & Closing Rate](assets/belum-ada-bro)
+![DFD Level 1](assets/dfdlv1.jfif)
 
 
 ---
