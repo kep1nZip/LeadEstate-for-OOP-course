@@ -1,5 +1,5 @@
 package com.leadestate.backend.service;
 
-public class service {
+public class LeadService {
     
 }
