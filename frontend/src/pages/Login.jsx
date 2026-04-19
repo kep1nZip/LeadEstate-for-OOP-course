@@ -167,7 +167,10 @@ const handleLogin = async (e) => {
           </button>
 
           <div className="register-link">
-            Belum punya akun? <a href="#">Daftar sekarang</a>
+            Belum punya akun?{" "}
+            <a onClick={() => navigate("/register")}>
+              Daftar sekarang
+            </a>
           </div>
         </div>
       </div>
