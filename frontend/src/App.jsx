@@ -4,6 +4,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import Settings from "./pages/Settings";
+import ForgotPass from "./pages/ForgotPass";
 
 function App() {
   const [user, setUser] = useState(null);
@@ -30,6 +31,13 @@ function App() {
           path="/register" 
           element={
             user ? <Navigate to="/dashboard" /> : <Register />
+          } 
+        />
+
+          <Route 
+          path="/forgot-password" 
+          element={
+            user ? <Navigate to="/dashboard" /> : <ForgotPass />
           } 
         />
 

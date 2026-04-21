@@ -139,7 +139,8 @@ const handleLogin = async (e) => {
             </div>
 
             <div className="forgot-row">
-              <a href="#" className="forgot-link">Lupa Password?</a>
+              <a onClick={() => navigate("/forgot-password")} 
+                className="forgot-link">Lupa Password?</a>
             </div>
 
             <button 
