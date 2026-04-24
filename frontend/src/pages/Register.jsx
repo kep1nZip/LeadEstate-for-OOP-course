@@ -475,8 +475,7 @@ function Step3({ data, onBack, onSubmit }) {
   const handleSubmit = () => {
     if (!terms) return setError("Anda harus menyetujui syarat & ketentuan.");
     setError("");
-    setLoading(true);
-    setTimeout(() => { setLoading(false); onSubmit(); }, 1600);
+    onSubmit();
   };
  
   return (
@@ -562,19 +561,47 @@ export default function Register() {
     const [formData,    setFormData]    = useState({ step1: {}, step2: {} });
     const navigate = useNavigate();
  
-  const handleStep1 = (data) => {
-    setFormData((prev) => ({ ...prev, step1: data }));
-    setCurrentStep(2);
-  };
+const handleStep1 = async (data) => {
+  try {
+    const res = await fetch(`http://localhost:8080/api/auth/check-email?email=${data.email}`);
+    
+    if (res.ok) {
+      setFormData((prev) => ({ ...prev, step1: data }));
+      setCurrentStep(2);
+    } else {
+      const msg = await res.text();
+      alert(msg); 
+    }
+  } catch (err) {
+    alert("Koneksi gagal! Pastikan aplikasi Spring Boot kamu sudah jalan.");
+  }
+};
  
   const handleStep2 = (data) => {
     setFormData((prev) => ({ ...prev, step2: data }));
     setCurrentStep(3);
   };
  
-  const handleSubmit = () => {
-    setIsDone(true);
+const handleSubmit = async () => {
+  const payload = {
+    name: `${formData.step1.firstName} ${formData.step1.lastName}`,
+    email: formData.step1.email,
+    password: formData.step1.password,
+    roleId: formData.step2.role === "admin" ? 1 : 2
   };
+
+  try {
+    const res = await fetch('http://localhost:8080/api/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    if (res.ok) setIsDone(true);
+  } catch (err) {
+    alert("Gagal simpan data.");
+  }
+};
  
   const rightScrollRef = useRef();
  

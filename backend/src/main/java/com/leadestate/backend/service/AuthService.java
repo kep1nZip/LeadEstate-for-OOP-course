@@ -36,4 +36,18 @@ public class AuthService {
 
         return user;
     }
+
+    public User register(User user) {
+        userRepository.findByEmail(user.getEmail()).ifPresent(u -> {
+        throw new RuntimeException("Email sudah terdaftar!");
+        });
+
+   
+        return userRepository.save(user);
+    }
+
+    public boolean existsByEmail(String email) {
+    return userRepository.existsByEmail(email); 
+   
+}
 }
