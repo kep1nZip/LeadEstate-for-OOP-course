@@ -18,7 +18,7 @@
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-    /* ── VARIABEL WARNA SIDEBAR (sama dengan reminder.jsp) ── */
+    /* ── SIDEBAR CSS ── */
     :root {
         --sidebar-bg:       #0f1923;
         --sidebar-border:   #1e3040;
@@ -27,7 +27,6 @@
         --gold: #c9a84c;
     }
 
-    /* ── SIDEBAR dot-grid overlay ── */
     .sidebar-grid::before {
         content: "";
         position: absolute;
@@ -41,22 +40,19 @@
     }
     .sidebar-grid > * { position: relative; z-index: 1; }
 
-    /* ── SCROLLBAR sidebar ── */
     .scroll-thin::-webkit-scrollbar       { width: 4px; }
     .scroll-thin::-webkit-scrollbar-track { background: transparent; }
     .scroll-thin::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 10px; }
 
-    /* Progress bar animasi */
     .bar-fill { transition: width .6s ease; }
 
-    /* Bar chart batang */
     .chart-bar { transition: height .5s ease; min-height: 4px; border-radius: 4px 4px 0 0; }
   </style>
 </head>
 <body class="bg-gray-50 text-gray-800 flex h-screen overflow-hidden" style="font-family:'DM Sans',sans-serif;">
 
 <%
-    /* ── Ambil user dari session ── */
+    /* Ambil user dari session */
     com.leadestate.model.User userLogin = (com.leadestate.model.User) session.getAttribute("userLogin");
     if (userLogin == null) {
         response.sendRedirect(request.getContextPath() + "/login");
@@ -66,7 +62,7 @@
     String roleName  = userLogin.getRoleName();
     boolean isAdmin  = "Admin".equalsIgnoreCase(roleName);
 
-    /* ── Inisial avatar (maks 2 huruf) ── */
+    /* Inisial avatar */
     String[] namaParts = namaUser.trim().split("\\s+");
     StringBuilder inisialSB = new StringBuilder();
     for (int i = 0; i < Math.min(2, namaParts.length); i++) {
@@ -75,9 +71,7 @@
     String inisialUser = inisialSB.toString().toUpperCase();
 %>
 
-<%-- ═══════════════════════════════════════════════════════
-     SIDEBAR
-════════════════════════════════════════════════════════ --%>
+<%-- SIDEBAR --%>
 <aside class="sidebar-grid w-64 flex-shrink-0 flex flex-col relative overflow-hidden"
        style="background:var(--sidebar-bg); border-right:1px solid var(--sidebar-border);">
 
@@ -101,7 +95,7 @@
         <div class="text-[10px] font-semibold uppercase tracking-widest px-1 py-1.5 mt-1"
              style="color:#3a5068; letter-spacing:1.2px;">Menu Utama</div>
 
-        <!-- Dashboard (aktif) -->
+        <!-- Dashboard -->
         <div class="flex items-center gap-2.5 px-3.5 py-2.5 rounded-[10px] text-[13.5px] font-bold cursor-default"
              style="background:var(--brand-gold); border:1px solid var(--brand-gold); color:#0b1622;">
             <span class="w-4.5 h-4.5 flex items-center justify-center flex-shrink-0">
@@ -227,9 +221,7 @@
     </div>
 </aside>
 
-<%-- ═══════════════════════════════════════════════════════
-     MAIN CONTENT
-════════════════════════════════════════════════════════ --%>
+<%-- MAIN CONTENT --%>
 <main class="flex-1 flex flex-col overflow-hidden">
 
   <%-- Topbar --%>
@@ -252,7 +244,7 @@
   <%-- Scrollable content area --%>
   <div class="flex-1 overflow-y-auto px-6 py-5 space-y-5">
 
-    <%-- ── KPI CARDS ─────────────────────────────────────── --%>
+    <%-- KPI CARDS --%>
     <div class="grid grid-cols-4 gap-4">
 
       <%-- Card 1: Total Lead Aktif --%>
@@ -300,10 +292,10 @@
       </div>
     </div>
 
-<%-- ── GRAFIK + TOP SALES (Ukuran disesuaikan menjadi grid-cols-5) ── --%>
+<%-- GRAFIK + TOP SALES --%>
     <div class="grid grid-cols-5 gap-4">
 
-      <%-- Grafik Closing Rate (Diubah menjadi col-span-3 agar ukurannya berkurang sedikit) --%>
+      <%-- Grafik Closing Rate --%>
       <div class="col-span-3 bg-white rounded-xl p-5 border border-gray-200 shadow-sm">
         <div class="flex items-start justify-between mb-4">
           <div>
@@ -315,7 +307,7 @@
           </div>
         </div>
 
-        <%-- Bar chart sederhana menggunakan data dari Controller --%>
+        <%-- Bar chart data dari Controller --%>
         <div class="flex items-end gap-3 h-28">
           <%
             String[] bulanLabel = {"Jan","Feb","Mar","Apr","Mei","Jun"};
@@ -348,10 +340,9 @@
         </div>
       </div>
 
-      <%-- Catatan: Pastikan di baris selanjutnya, tag pembuka Card Top Sales juga diganti menjadi col-span-3 seperti ini: --%>
       <%-- <div class="col-span-3 bg-white rounded-xl p-5 border border-gray-200 shadow-sm"> --%>
 
-     <%-- Top Sales Leaderboard (Diubah ke col-span-3 dan Tema Terang) --%>
+     <%-- Top Sales Leaderboard --%>
       <div class="col-span-2 bg-white rounded-xl p-5 border border-gray-200 shadow-sm">
         <div class="mb-4">
           <div class="text-sm font-semibold text-gray-800">🏆 Top Sales</div>
@@ -472,7 +463,6 @@
 </main>
 
 <script>
-  // Tanggal hari ini
   document.getElementById('tanggalHariIni').textContent =
     new Date().toLocaleDateString('id-ID', {
       weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'

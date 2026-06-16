@@ -26,31 +26,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Controller (Servlet) untuk fitur Follow-up.
- *
- * <p>Menangani semua aksi yang berkaitan dengan tabel {@code followups}:
- * menampilkan daftar follow-up per lead, mencatat aktivitas (logActivity),
- * mengedit catatan (editNotes), dan menandai selesai (markAsDone).</p>
- *
- * <p>URL pattern: {@code /followup} — aksi dibedakan via parameter
- * {@code action} pada request.</p>
- *
- * <p>Aksi yang didukung:</p>
- * <ul>
- *   <li>{@code list}      — GET  — daftar follow-up untuk satu leadId</li>
- *   <li>{@code catat}     — POST — catat aktivitas baru (INSERT)</li>
- *   <li>{@code edit}      — POST — edit catatan notes (UPDATE)</li>
- *   <li>{@code selesai}   — POST — tandai follow-up selesai (UPDATE status)</li>
- *   <li>{@code hapus}     — POST — hapus follow-up (DELETE)</li>
- * </ul>
- *
- * <p>Semua aksi membutuhkan user yang sudah login (cek session {@code userLogin}).
- * Jika belum login, redirect ke {@code /login}.</p>
- *
- * @author Rafa Ahmad Aulia (103012400169)
- * @version 1.0
- */
 @WebServlet("/followup")
 public class FollowUpController extends HttpServlet {
 
@@ -61,18 +36,8 @@ public class FollowUpController extends HttpServlet {
     // Format tanggal yang dikirim dari form JSP (input datetime-local)
     private static final String FORMAT_DATETIME = "yyyy-MM-dd'T'HH:mm";
 
-    // =========================================================================
     // doGet — menampilkan data (read)
-    // =========================================================================
 
-    /**
-     * Menangani HTTP GET.
-     *
-     * <p>Routing berdasarkan parameter {@code action}:</p>
-     * <ul>
-     *   <li>Tidak ada / {@code list} — tampilkan daftar follow-up untuk leadId tertentu</li>
-     * </ul>
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -98,21 +63,8 @@ public class FollowUpController extends HttpServlet {
         }
     }
 
-    // =========================================================================
     // doPost — aksi ubah data (create / update / delete)
-    // =========================================================================
 
-    /**
-     * Menangani HTTP POST.
-     *
-     * <p>Routing berdasarkan parameter {@code action}:</p>
-     * <ul>
-     *   <li>{@code catat}   — INSERT follow-up baru (logActivity)</li>
-     *   <li>{@code edit}    — UPDATE notes follow-up (editNotes)</li>
-     *   <li>{@code selesai} — UPDATE status menjadi Selesai (markAsDone)</li>
-     *   <li>{@code hapus}   — DELETE follow-up</li>
-     * </ul>
-     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -148,17 +100,8 @@ public class FollowUpController extends HttpServlet {
         }
     }
 
-    // =========================================================================
     // HANDLER PRIVAT
-    // =========================================================================
 
-    /**
-     * Menampilkan daftar riwayat follow-up untuk satu lead.
-     *
-     * <p>Membutuhkan parameter request: {@code leadId} (int).</p>
-     * <p>Men-set attribute {@code daftarFollowUp} ke request lalu
-     * forward ke JSP {@code followup/list.jsp}.</p>
-     */
     private void tampilkanDaftarFollowUp(HttpServletRequest request,
                                           HttpServletResponse response)
             throws ServletException, IOException {
@@ -184,15 +127,6 @@ public class FollowUpController extends HttpServlet {
         request.getRequestDispatcher("/WEB-INF/jsp/followup/list.jsp").forward(request, response);
     }
 
-    /**
-     * Mencatat aktivitas follow-up baru (INSERT ke tabel followups).
-     *
-     * <p>Membutuhkan parameter request:
-     * {@code leadId}, {@code salesId}, {@code notes}, {@code followupDate} (format yyyy-MM-dd'T'HH:mm).</p>
-     *
-     * <p>Setelah berhasil INSERT, otomatis membuat Reminder terkait dan
-     * mengirim Notifikasi ke Sales yang bersangkutan.</p>
-     */
     private void catatAktivitas(HttpServletRequest request,
                                 HttpServletResponse response)
             throws ServletException, IOException {
@@ -241,11 +175,6 @@ public class FollowUpController extends HttpServlet {
                 + (berhasil ? "&sukses=catat" : "&gagal=catat"));
     }
 
-    /**
-     * Mengedit catatan (notes) pada follow-up yang sudah ada (UPDATE).
-     *
-     * <p>Membutuhkan parameter request: {@code followupId}, {@code notes}.</p>
-     */
     private void editCatatan(HttpServletRequest request,
                              HttpServletResponse response)
             throws ServletException, IOException {
@@ -276,14 +205,6 @@ public class FollowUpController extends HttpServlet {
                 + (berhasil ? "&sukses=edit" : "&gagal=edit"));
     }
 
-    /**
-     * Menandai follow-up sebagai selesai (UPDATE status → "Selesai").
-     *
-     * <p>Membutuhkan parameter request: {@code followupId}.</p>
-     *
-     * <p>Setelah status di-update, semua Reminder terkait juga
-     * ditandai selesai.</p>
-     */
     private void tandaiSelesai(HttpServletRequest request,
                                HttpServletResponse response)
             throws ServletException, IOException {
@@ -321,14 +242,6 @@ public class FollowUpController extends HttpServlet {
                 + (berhasil ? "&sukses=selesai" : "&gagal=selesai"));
     }
 
-    /**
-     * Menghapus follow-up beserta semua Reminder-nya (DELETE).
-     *
-     * <p>Membutuhkan parameter request: {@code followupId}.</p>
-     *
-     * <p>Urutan penghapusan: Reminder dulu → baru FollowUp,
-     * agar tidak melanggar foreign key constraint.</p>
-     */
     private void hapusFollowUp(HttpServletRequest request,
                                HttpServletResponse response)
             throws ServletException, IOException {
@@ -365,16 +278,8 @@ public class FollowUpController extends HttpServlet {
                 + (berhasil ? "&sukses=hapus" : "&gagal=hapus"));
     }
 
-    // =========================================================================
     // UTILITAS PRIVAT
-    // =========================================================================
 
-    /**
-     * Mem-parse String tanggal dari input datetime-local HTML ke {@code java.util.Date}.
-     *
-     * @param tglStr String tanggal format "yyyy-MM-dd'T'HH:mm".
-     * @return objek Date, atau {@code null} jika parsing gagal.
-     */
     private Date parseDate(String tglStr) {
         try {
             return new SimpleDateFormat(FORMAT_DATETIME).parse(tglStr);
@@ -384,14 +289,6 @@ public class FollowUpController extends HttpServlet {
         }
     }
 
-    /**
-     * Membuat dan menyimpan Notifikasi ke database setelah aksi follow-up.
-     *
-     * @param userId      id user penerima notifikasi.
-     * @param followupId  id follow-up terkait.
-     * @param message     isi pesan notifikasi.
-     * @param reminderDate tanggal reminder (sama dengan followupDate).
-     */
     private void kirimNotifikasi(int userId, int followupId,
                                  String message, Date reminderDate) {
         Notifikasi notif = new Notifikasi();

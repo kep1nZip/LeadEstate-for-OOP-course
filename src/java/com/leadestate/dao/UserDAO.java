@@ -10,9 +10,7 @@ import java.util.List;
 
 public class UserDAO {
 
-    // =====================================================
     // FIND ALL
-    // =====================================================
     public List<User> findAll() {
         List<User> users = new ArrayList<>();
 
@@ -40,9 +38,7 @@ public class UserDAO {
         return users;
     }
 
-    // =====================================================
     // FIND BY ID
-    // =====================================================
     public User findById(int id) {
 
         String sql = """
@@ -72,9 +68,7 @@ public class UserDAO {
         return null;
     }
 
-    // =====================================================
     // FIND BY EMAIL
-    // =====================================================
 public User findByEmail(String email) {
 
     System.out.println("MENCARI EMAIL = [" + email + "]");
@@ -105,9 +99,7 @@ public User findByEmail(String email) {
     return null;
 }
 
-    // =====================================================
     // FIND BY ROLE
-    // =====================================================
     public List<User> findByRole(String roleName) {
 
         List<User> users = new ArrayList<>();
@@ -141,16 +133,12 @@ public User findByEmail(String email) {
         return users;
     }
 
-    // =====================================================
     // CEK EMAIL
-    // =====================================================
     public boolean isEmailExist(String email) {
         return findByEmail(email) != null;
     }
 
-    // =====================================================
     // SAVE USER
-    // =====================================================
     public void save(User user) {
 
         String sql = """
@@ -183,9 +171,7 @@ public User findByEmail(String email) {
         }
     }
 
-    // =====================================================
     // UPDATE USER
-    // =====================================================
     public boolean update(User user) {
 
         String sql = """
@@ -217,9 +203,7 @@ public User findByEmail(String email) {
         return false;
     }
 
-    // =====================================================
     // DELETE USER
-    // =====================================================
     public boolean delete(int id) {
 
         String sql = "DELETE FROM users WHERE id=?";
@@ -240,9 +224,7 @@ public User findByEmail(String email) {
         return false;
     }
 
-    // =====================================================
     // MAPPER RESULTSET -> USER
-    // =====================================================
     private User mapUser(ResultSet rs) throws SQLException {
 
         int id = rs.getInt("id");
@@ -257,9 +239,10 @@ public User findByEmail(String email) {
             return new Sales(id, name, email, password);
         }
     }
-    // =====================================================
+    
+    
 // UPDATE PASSWORD
-// =====================================================
+    
 public boolean updatePassword(String email, String newPassword) {
 
     String sql =

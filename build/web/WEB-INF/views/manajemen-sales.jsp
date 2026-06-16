@@ -59,9 +59,7 @@
     String inisialUser = inisialSB.toString().toUpperCase();
 %>
 
-<%-- ═══════════════════════════════════════════════════════
-     SIDEBAR (identik dengan dashboard.jsp)
-════════════════════════════════════════════════════════ --%>
+<%-- SIDEBAR --%>
 <aside class="sidebar-grid w-64 flex-shrink-0 flex flex-col relative overflow-hidden"
        style="background:var(--sidebar-bg); border-right:1px solid var(--sidebar-border);">
 
@@ -207,9 +205,7 @@
     </div>
 </aside>
 
-<%-- ═══════════════════════════════
-     MAIN
-══════════════════════════════════ --%>
+<%-- MAIN --%>
 <main class="flex-1 flex flex-col overflow-hidden">
 
  <%-- Topbar — TEMA TERANG --%>
@@ -326,13 +322,12 @@
       </div>
     </div>
 
-    <%-- ── RIGHT PANEL: Detail Sales — TEMA TERANG ── --%>
+    <%-- RIGHT PANEL: Detail Sales — TEMA TERANG --%>
     <div class="flex-1 overflow-y-auto p-5 bg-gray-50/50">
 
-      <%-- Cek apakah mode detail (ada param id) --%>
       <c:choose>
 
-        <%-- Mode detail: tampilkan profil + statistik --%>
+        <%-- tampilkan profil + statistik --%>
         <c:when test="${not empty param.aksi and param.aksi == 'detail' and not empty sales}">
           
           <%-- Profile card --%>
@@ -502,9 +497,7 @@
   </div>
 </main>
 
-<%-- ═══════════════════════════════
-     MODAL: Form Tambah / Edit Sales
-══════════════════════════════════ --%>
+<%-- MODAL: Form Tambah / Edit Sales --%>
 <c:if test="${(param.aksi == 'tambah') or (param.aksi == 'edit' and not empty sales)}">
 <div id="salesModal"
      class="fixed inset-0 bg-black/60 flex items-center justify-center z-50"
@@ -581,7 +574,6 @@
 </c:if>
 
 <script>
-  // Tanggal hari ini
   const tgl = document.getElementById('tanggalHariIni');
   if (tgl) tgl.textContent = new Date().toLocaleDateString('id-ID', {
     weekday:'long', day:'numeric', month:'long', year:'numeric'
@@ -590,12 +582,10 @@
   const bln = document.getElementById('bulanTahun');
   if (bln) bln.textContent = new Date().toLocaleDateString('id-ID', {month:'long', year:'numeric'});
 
-  // Navigasi ke halaman detail Sales
   function selectSales(salesId) {
     window.location.href = '${pageContext.request.contextPath}/manajemen-sales?aksi=detail&id=' + salesId;
   }
 
-  // Highlight item yang sedang aktif
   const currentId = '${param.id}';
   if (currentId) {
     document.querySelectorAll('.sales-item').forEach(el => {
@@ -605,7 +595,6 @@
     });
   }
 
-  // Filter pencarian client-side
   function filterSales(q) {
     const lower = q.toLowerCase().trim();
     document.querySelectorAll('.sales-item').forEach(el => {
@@ -614,7 +603,6 @@
     });
   }
 
-  // Tutup modal — redirect ke daftar utama
   function closeModal() {
     window.location.href = '${pageContext.request.contextPath}/manajemen-sales';
   }

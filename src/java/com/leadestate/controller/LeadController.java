@@ -19,47 +19,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/**
- * Controller (Servlet) untuk fitur Core Lead Management (Data Lead).
- *
- * <p>
- * Versi adaptasi untuk halaman tunggal {@code lead.jsp} dengan modal (form
- * tambah/edit & detail muncul sebagai overlay di atas list, tanpa file JSP
- * terpisah seperti versi awal). Modal dikendalikan lewat attribute
- * {@code modalMode} ("none" / "form" / "detail") yang dibaca oleh lead.jsp
- * untuk menampilkan/menyembunyikan elemen modal.</p>
- *
- * <p>
- * Aksi (action) dikirim lewat parameter request {@code action} ATAU
- * {@code aksi} (alias — keduanya didukung agar fleksibel dengan gaya penamaan
- * form di lead.jsp).</p>
- *
- * <p>
- * Daftar aksi:</p>
- * <ul>
- * <li>GET (default / "list") -&gt; tampilkan list, modal tertutup.</li>
- * <li>GET "form" -&gt; tampilkan list + modal form (tambah jika tanpa parameter
- * id, edit jika ada id).</li>
- * <li>GET "detail" -&gt; tampilkan list + modal detail lead (termasuk
- * daftarFollowUp).</li>
- * <li>GET "delete" -&gt; hapus lead, redirect ke list.</li>
- * <li>POST "add" -&gt; tambah lead baru.</li>
- * <li>POST "edit" -&gt; ubah data lead.</li>
- * <li>POST "changeStatus" -&gt; ubah statusId lead.</li>
- * </ul>
- *
- * <p>
- * Forward tunggal ke: {@code /WEB-INF/views/laporan.jsp}.</p>
- *
- * <p>
- * Catatan implementasi: Method Lead.save(), Lead.validateDate(), dan
- * Lead.changeStatus() pada tahap POJO hanya berisi println/placeholder (belum
- * terhubung DAO). Controller ini TETAP memanggil method-method tersebut untuk
- * validasi (validateDate(), validateStatus()) dan notifikasi
- * (notifySalesOfChange()), namun PENYIMPANAN SESUNGGUHNYA dilakukan lewat
- * LeadDAO secara langsung
- * (leadDAO.save()/update()/updateStatus()/delete()).</p>
- */
 @WebServlet(name = "LeadController", urlPatterns = {"/lead"})
 public class LeadController extends HttpServlet {
 
@@ -117,24 +76,6 @@ public class LeadController extends HttpServlet {
         }
     }
 
-    /**
-     * Menyiapkan SEMUA data yang dibutuhkan halaman {@code lead.jsp} (daftar
-     * Lead + dropdown Property/LeadStatus), lalu menambahkan data tambahan
-     * sesuai {@code modalMode}:
-     * <ul>
-     * <li>"none" : tidak ada data tambahan, modal tertutup.</li>
-     * <li>"form" : jika ada parameter id -> mode edit (attribute {@code lead}
-     * diisi); jika tidak -> mode tambah.</li>
-     * <li>"detail" : attribute {@code lead}, {@code property}, {@code status}
-     * diisi, serta {@code lead.daftarFollowUp} diisi via FollowUpDAO.</li>
-     * </ul>
-     *
-     * Mendukung filter opsional lewat parameter request {@code salesId}
-     * dan/atau {@code statusId} untuk daftar Lead (filter pada list tetap
-     * berfungsi walau modal sedang terbuka).
-     *
-     * Forward ke: /WEB-INF/views/lead.jsp
-     */
     private void showListWithModal(HttpServletRequest request, HttpServletResponse response,
             String modalMode) throws ServletException, IOException {
 
@@ -221,16 +162,6 @@ public class LeadController extends HttpServlet {
         rd.forward(request, response);
     }
 
-    /**
-     * Menambahkan Lead baru.
-     *
-     * Alur: bentuk objek Lead dari parameter form -> inputData() ->
-     * validateDate() -> jika valid, leadDAO.save().
-     *
-     * Jika gagal validasi, redirect kembali ke list dengan modal form terbuka
-     * kembali (lewat parameter action=form) dan errorMessage dikirim via flash
-     * attribute sederhana (query param).
-     */
     private void addLead(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
@@ -264,10 +195,6 @@ public class LeadController extends HttpServlet {
         response.sendRedirect(redirectUrl);
     }
 
-    /**
-     * Mengubah data Lead yang sudah ada (kecuali statusId, lihat
-     * changeStatus()).
-     */
     private void editLead(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
@@ -300,17 +227,6 @@ public class LeadController extends HttpServlet {
                 + "/lead?action=detail&id=" + lead.getId() + "&sukses=edit");
     }
 
-    /**
-     * Mengubah status Lead.
-     *
-     * Alur: ambil Lead -> validateStatus(newStatusId) -> jika valid,
-     * leadDAO.updateStatus() -> catat riwayat via LeadStatus.saveHistory()
-     * (dipanggil di dalam Lead.changeStatus()) -> notifySalesOfChange().
-     *
-     * Catatan: Lead.changeStatus() di model TIDAK menyimpan ke database (masih
-     * placeholder println), jadi controller memanggil leadDAO.updateStatus()
-     * secara terpisah setelah validasi.
-     */
     private void changeStatus(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
@@ -329,9 +245,6 @@ public class LeadController extends HttpServlet {
             return;
         }
 
-        // changeStatus() di model akan: mencatat riwayat (LeadStatus.saveHistory),
-        // memperbarui field statusId pada objek lead di memori, dan memanggil
-        // notifySalesOfChange().
         lead.changeStatus(newStatusId);
 
         // Simpan perubahan statusId ke database.
@@ -341,10 +254,6 @@ public class LeadController extends HttpServlet {
                 + "/lead?action=detail&id=" + id + "&sukses=status");
     }
 
-    /**
-     * Menghapus Lead berdasarkan id (FollowUp & Reminder terkait ikut terhapus
-     * otomatis lewat ON DELETE CASCADE pada database).
-     */
     private void delete(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
@@ -355,12 +264,6 @@ public class LeadController extends HttpServlet {
     }
 
     // ===== Helper =====
-    /**
-     * Mengambil nilai aksi dari parameter request, mendukung dua nama
-     * parameter: {@code action} (default, dipakai versi sebelumnya) dan
-     * {@code aksi} (alias, gaya penamaan Bahasa Indonesia). Jika kedua
-     * parameter tidak ada, mengembalikan "list".
-     */
     private String getAction(HttpServletRequest request) {
         String action = request.getParameter("action");
         if (action == null || action.trim().isEmpty()) {
@@ -372,11 +275,6 @@ public class LeadController extends HttpServlet {
         return action.trim();
     }
 
-    /**
-     * Mengubah String menjadi int. Mengembalikan 0 jika String null, kosong,
-     * atau tidak bisa di-parse, agar controller tidak crash akibat
-     * NumberFormatException dari input form yang kosong.
-     */
     private int parseIntOrZero(String value) {
         if (value == null || value.trim().isEmpty()) {
             return 0;

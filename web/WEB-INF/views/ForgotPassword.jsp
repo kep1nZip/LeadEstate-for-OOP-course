@@ -28,9 +28,7 @@
         <p class="success">${successMessage}</p>
     </c:if>
 
-    <%-- ======================================================
-         STEP 1 - INPUT EMAIL (Default jika step kosong atau "1")
-         ====================================================== --%>
+    <%-- STEP 1 - INPUT EMAIL --%>
     <c:if test="${empty step || step == '1'}">
         <h2>Lupa Password</h2>
         <p>Masukkan email anda</p>
@@ -41,9 +39,7 @@
         </form>
     </c:if>
 
-    <%-- ======================================================
-         STEP 2 - VERIFIKASI OTP (Ditampilkan jika step == 'otp')
-         ====================================================== --%>
+    <%-- STEP 2 - VERIFIKASI OTP --%>
     <c:if test="${step == 'otp'}">
         <h2>Verifikasi OTP</h2>
         <p>OTP telah dikirim ke: <br><b>${sessionScope.resetEmail}</b></p>
@@ -62,9 +58,7 @@
         </form>
     </c:if>
 
-    <%-- ======================================================
-         STEP 3 - PASSWORD BARU (Ditampilkan jika step == 'newPassword')
-         ====================================================== --%>
+    <%-- STEP 3 - PASSWORD BARU --%>
     <c:if test="${step == 'newPassword'}">
         <h2>Password Baru</h2>
         <form action="${pageContext.request.contextPath}/AuthController" method="post">
@@ -74,9 +68,7 @@
         </form>
     </c:if>
 
-    <%-- ======================================================
-         STEP 4 - SUCCESS
-         ====================================================== --%>
+    <%-- STEP 4 - SUCCESS --%>
     <c:if test="${step == 'success'}">
         <h2>Password Berhasil Diganti</h2>
         <p class="success">Password berhasil diperbarui.</p>

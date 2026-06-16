@@ -19,43 +19,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Controller untuk halaman Manajemen Sales (Admin).
- *
- * Menangani seluruh operasi CRUD pada data Sales dan monitoring
- * performa tim, yang mencakup:
- * - Melihat daftar semua Sales beserta statistik singkat
- * - Melihat detail profil dan performa Sales tertentu
- * - Menambah Sales baru
- * - Mengedit data Sales
- * - Menghapus Sales
- * - Re-assign Lead dari satu Sales ke Sales lain
- *
- * URL pattern: /manajemen-sales
- * Aksi dibedakan via parameter "aksi" pada request:
- *
- *   GET  /manajemen-sales                      → daftar semua Sales
- *   GET  /manajemen-sales?aksi=detail&id=X     → detail Sales id=X
- *   GET  /manajemen-sales?aksi=tambah          → form tambah Sales baru
- *   GET  /manajemen-sales?aksi=edit&id=X       → form edit Sales id=X
- *   POST /manajemen-sales?aksi=simpan          → proses tambah/edit
- *   POST /manajemen-sales?aksi=hapus           → proses hapus Sales
- *   POST /manajemen-sales?aksi=reassign        → pindah Lead ke Sales lain
- *
- * Hanya dapat diakses oleh user dengan roleId = Admin.ROLE_ID (1).
- *
- * @author Fathan Firdaus Nuzulan (103012400353)
- * @version 1.0
- */
 @WebServlet("/manajemen-sales")
 public class UserManagementController extends HttpServlet {
 
     // Status id Closed Won (sesuai leadestate_v2.sql)
     private static final int STATUS_CLOSED_WON = 5;
 
-    // =========================================================================
     // DEPENDENSI DAO
-    // =========================================================================
 
     /** DAO untuk operasi CRUD user. */
     private UserDAO userDAO;
@@ -66,15 +36,8 @@ public class UserManagementController extends HttpServlet {
     /** DAO untuk statistik FollowUp per Sales. */
     private FollowUpDAO followUpDAO;
 
-    // =========================================================================
     // INISIALISASI SERVLET
-    // =========================================================================
 
-    /**
-     * Inisialisasi semua DAO saat servlet pertama kali dimuat.
-     *
-     * @throws ServletException jika terjadi error saat inisialisasi.
-     */
     @Override
     public void init() throws ServletException {
         userDAO     = new UserDAO();
@@ -82,18 +45,7 @@ public class UserManagementController extends HttpServlet {
         followUpDAO = new FollowUpDAO();
     }
 
-    // =========================================================================
     // HTTP GET — Routing berdasarkan parameter "aksi"
-    // =========================================================================
-
-    /**
-     * Menangani seluruh request GET untuk Manajemen Sales.
-     *
-     * @param request  HTTP request dari browser.
-     * @param response HTTP response ke browser.
-     * @throws ServletException jika terjadi error servlet.
-     * @throws IOException      jika terjadi error I/O.
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -123,18 +75,8 @@ public class UserManagementController extends HttpServlet {
         }
     }
 
-    // =========================================================================
     // HTTP POST — Routing berdasarkan parameter "aksi"
-    // =========================================================================
-
-    /**
-     * Menangani seluruh request POST untuk Manajemen Sales.
-     *
-     * @param request  HTTP request dari browser.
-     * @param response HTTP response ke browser.
-     * @throws ServletException jika terjadi error servlet.
-     * @throws IOException      jika terjadi error I/O.
-     */
+ 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -163,19 +105,8 @@ public class UserManagementController extends HttpServlet {
         }
     }
 
-    // =========================================================================
     // HANDLER GET — Daftar Sales
-    // =========================================================================
 
-    /**
-     * Menampilkan daftar semua Sales beserta statistik singkat.
-     *
-     * Data yang dikirim ke JSP (manajemen-sales.jsp):
-     * - daftarSalesData : List<Object[]> masing-masing berisi
-     *                     [Sales, totalLead (int), totalClosing (int)]
-     *
-     * Forward ke: /WEB-INF/views/manajemen-sales.jsp
-     */
     private void tampilDaftarSales(HttpServletRequest request,
                                    HttpServletResponse response)
             throws ServletException, IOException {
@@ -214,26 +145,8 @@ public class UserManagementController extends HttpServlet {
                .forward(request, response);
     }
 
-    // =========================================================================
     // HANDLER GET — Detail Sales
-    // =========================================================================
-
-    /**
-     * Menampilkan profil dan statistik performa detail satu Sales.
-     *
-     * Parameter URL: id (salesId)
-     *
-     * Data yang dikirim ke JSP (detail-sales.jsp):
-     * - sales          : objek User (Sales)
-     * - totalLead      : int jumlah lead yang ditangani
-     * - totalFollowUp  : int jumlah follow-up
-     * - totalClosing   : int jumlah closing
-     * - pctPencapaian  : double persentase pencapaian target (target default 10)
-     * - daftarLead     : List<Lead> lead yang ditangani Sales ini
-     * - aktivitasTerbaru : List<FollowUp> 5 follow-up terbaru Sales ini
-     *
-     * Forward ke: /WEB-INF/views/detail-sales.jsp
-     */
+    
     private void tampilDetailSales(HttpServletRequest request,
                                    HttpServletResponse response)
             throws ServletException, IOException {
@@ -287,14 +200,8 @@ public class UserManagementController extends HttpServlet {
                .forward(request, response);
     }
 
-    // =========================================================================
     // HANDLER GET — Form Tambah
-    // =========================================================================
 
-    /**
-     * Menampilkan form kosong untuk menambah Sales baru.
-     * Forward ke: /WEB-INF/views/form-sales.jsp
-     */
     private void tampilFormTambah(HttpServletRequest request,
                                   HttpServletResponse response)
             throws ServletException, IOException {
@@ -305,15 +212,8 @@ public class UserManagementController extends HttpServlet {
                .forward(request, response);
     }
 
-    // =========================================================================
     // HANDLER GET — Form Edit
-    // =========================================================================
 
-    /**
-     * Menampilkan form edit dengan data Sales yang sudah ada.
-     * Parameter URL: id (salesId yang ingin diedit)
-     * Forward ke: /WEB-INF/views/form-sales.jsp
-     */
     private void tampilFormEdit(HttpServletRequest request,
                                 HttpServletResponse response)
             throws ServletException, IOException {
@@ -337,21 +237,8 @@ public class UserManagementController extends HttpServlet {
                .forward(request, response);
     }
 
-    // =========================================================================
     // HANDLER POST — Simpan (Tambah / Edit)
-    // =========================================================================
 
-    /**
-     * Memproses form tambah atau edit Sales.
-     *
-     * Parameter POST:
-     * - id       : ada jika edit, kosong/null jika tambah baru
-     * - name     : nama Sales (wajib)
-     * - email    : email Sales (wajib)
-     * - password : wajib saat tambah, opsional saat edit
-     *
-     * Setelah selesai, redirect ke /manajemen-sales.
-     */
     private void prosesSimpanSales(HttpServletRequest request,
                                    HttpServletResponse response)
             throws ServletException, IOException {
@@ -432,19 +319,8 @@ if (roleIdParam != null && !roleIdParam.trim().isEmpty()) {
         redirect(response, request, "/manajemen-sales");
     }
 
-    // =========================================================================
     // HANDLER POST — Hapus Sales
-    // =========================================================================
 
-    /**
-     * Memproses penghapusan data Sales berdasarkan id.
-     *
-     * Parameter POST: id (salesId yang akan dihapus)
-     *
-     * Proteksi: Admin tidak bisa menghapus akunnya sendiri.
-     * Lead yang salesId-nya = Sales ini akan menjadi NULL di DB
-     * (ON DELETE SET NULL pada FK leads.salesId).
-     */
     private void prosesHapusSales(HttpServletRequest request,
                                   HttpServletResponse response)
             throws ServletException, IOException {
@@ -469,22 +345,8 @@ if (roleIdParam != null && !roleIdParam.trim().isEmpty()) {
         redirect(response, request, "/manajemen-sales");
     }
 
-    // =========================================================================
     // HANDLER POST — Re-assign Lead
-    // =========================================================================
 
-    /**
-     * Memproses perpindahan (re-assign) Lead dari satu Sales ke Sales lain.
-     *
-     * Cara kerja: ambil semua lead milik salesIdLama via LeadDAO.findBySalesId(),
-     * lalu update satu per satu salesId-nya ke salesIdBaru via LeadDAO.update().
-     *
-     * Parameter POST:
-     * - salesIdLama : id Sales asal
-     * - salesIdBaru : id Sales tujuan
-     *
-     * Redirect ke detail Sales tujuan setelah selesai.
-     */
     private void prosesReassignLead(HttpServletRequest request,
                                     HttpServletResponse response)
             throws ServletException, IOException {
@@ -510,16 +372,8 @@ if (roleIdParam != null && !roleIdParam.trim().isEmpty()) {
         redirect(response, request, "/manajemen-sales?aksi=detail&id=" + salesIdBaru);
     }
 
-    // =========================================================================
     // UTILITY — Helper method
-    // =========================================================================
 
-    /**
-     * Memastikan user sudah login dan memiliki role Admin.
-     * Redirect ke /login atau /followup jika tidak memenuhi syarat.
-     *
-     * @return true jika akses valid, false jika sudah di-redirect.
-     */
     private boolean cekAksesAdmin(HttpServletRequest request,
                                   HttpServletResponse response)
             throws IOException {
@@ -537,10 +391,7 @@ if (roleIdParam != null && !roleIdParam.trim().isEmpty()) {
         return true;
     }
 
-    /**
-     * Parse parameter id dari String ke int.
-     * Mengembalikan -1 jika null, kosong, atau bukan angka.
-     */
+
     private int parseId(String param) {
         if (param == null || param.trim().isEmpty()) return -1;
         try {

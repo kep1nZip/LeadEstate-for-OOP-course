@@ -15,37 +15,10 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * DAO (Data Access Object) untuk kelas Notifikasi.
- *
- * Bertugas menjembatani objek Notifikasi (model) dengan tabel {@code notifikasi}
- * pada database (lihat leadestate_v2.sql).
- *
- * <p>Kolom tabel notifikasi:
- * {@code notifId, message, sentAt, isRead, followupId, reminderDate, status, userId}</p>
- *
- * <p>Notifikasi merupakan turunan (extends) dari Reminder, sehingga tabel ini
- * menyimpan kolom tambahan dibanding tabel {@code reminders}: yaitu
- * {@code message}, {@code sentAt}, {@code isRead}, dan {@code userId}.</p>
- *
- * <p>Pola implementasi mengikuti {@code ReminderDAO.java}:
- * try-with-resources + PreparedStatement, koneksi dari
- * {@code DBConnection.getConnection()}.</p>
- *
- * @author Rafa Ahmad Aulia (103012400169)
- * @version 1.0
- */
 public class NotifikasiDAO {
 
-    // =========================================================================
     // READ
-    // =========================================================================
 
-    /**
-     * Mengambil seluruh data notifikasi dari database.
-     *
-     * @return List berisi semua Notifikasi, kosong jika tidak ada data.
-     */
     public List<Notifikasi> findAll() {
         List<Notifikasi> daftar = new ArrayList<>();
         String sql = "SELECT notifId, message, sentAt, isRead, "
@@ -64,12 +37,6 @@ public class NotifikasiDAO {
         return daftar;
     }
 
-    /**
-     * Mencari satu notifikasi berdasarkan notifId.
-     *
-     * @param notifId id notifikasi yang dicari.
-     * @return objek Notifikasi jika ditemukan, atau {@code null} jika tidak ada.
-     */
     public Notifikasi findById(int notifId) {
         String sql = "SELECT notifId, message, sentAt, isRead, "
                    + "followupId, reminderDate, status, userId "
@@ -90,13 +57,6 @@ public class NotifikasiDAO {
         return null;
     }
 
-    /**
-     * Mengambil semua notifikasi milik satu user, diurutkan dari terbaru.
-     * Dipakai untuk menampilkan daftar notifikasi di header/bell icon.
-     *
-     * @param userId id user penerima notifikasi.
-     * @return List Notifikasi milik user tersebut, terbaru di atas.
-     */
     public List<Notifikasi> findByUserId(int userId) {
         List<Notifikasi> daftar = new ArrayList<>();
         String sql = "SELECT notifId, message, sentAt, isRead, "
@@ -118,13 +78,6 @@ public class NotifikasiDAO {
         return daftar;
     }
 
-    /**
-     * Mengambil notifikasi yang belum dibaca milik satu user.
-     * Dipakai untuk badge notifikasi (menampilkan jumlah & isi yang belum dibaca).
-     *
-     * @param userId id user penerima notifikasi.
-     * @return List Notifikasi yang belum dibaca (isRead = 0), terbaru di atas.
-     */
     public List<Notifikasi> findBelumDibacaByUserId(int userId) {
         List<Notifikasi> daftar = new ArrayList<>();
         String sql = "SELECT notifId, message, sentAt, isRead, "
@@ -146,13 +99,6 @@ public class NotifikasiDAO {
         return daftar;
     }
 
-    /**
-     * Menghitung jumlah notifikasi yang belum dibaca milik satu user.
-     * Dipakai untuk angka badge pada ikon notifikasi di header.
-     *
-     * @param userId id user penerima notifikasi.
-     * @return jumlah notifikasi yang belum dibaca (isRead = 0).
-     */
     public int countUnreadByUserId(int userId) {
         String sql = "SELECT COUNT(*) FROM notifikasi WHERE userId = ? AND isRead = 0";
 
@@ -171,12 +117,6 @@ public class NotifikasiDAO {
         return 0;
     }
 
-    /**
-     * Mencari semua notifikasi yang terkait dengan satu followupId.
-     *
-     * @param followupId id follow-up terkait.
-     * @return List Notifikasi terkait follow-up tersebut.
-     */
     public List<Notifikasi> findByFollowupId(int followupId) {
         List<Notifikasi> daftar = new ArrayList<>();
         String sql = "SELECT notifId, message, sentAt, isRead, "
@@ -198,19 +138,8 @@ public class NotifikasiDAO {
         return daftar;
     }
 
-    // =========================================================================
     // CREATE
-    // =========================================================================
 
-    /**
-     * Menyimpan notifikasi baru ke database (INSERT).
-     *
-     * <p>notifId pada objek notifikasi akan diisi otomatis dengan id hasil
-     * generate dari database setelah berhasil disimpan.</p>
-     *
-     * @param notifikasi objek Notifikasi yang akan disimpan (tanpa notifId).
-     * @return {@code true} jika berhasil, {@code false} jika gagal.
-     */
     public boolean save(Notifikasi notifikasi) {
         String sql = "INSERT INTO notifikasi "
                    + "(message, sentAt, isRead, followupId, reminderDate, status, userId) "
@@ -242,16 +171,8 @@ public class NotifikasiDAO {
         return false;
     }
 
-    // =========================================================================
     // UPDATE
-    // =========================================================================
 
-    /**
-     * Memperbarui data notifikasi yang sudah ada (UPDATE berdasarkan notifId).
-     *
-     * @param notifikasi objek Notifikasi dengan notifId yang valid dan data baru.
-     * @return {@code true} jika berhasil, {@code false} jika gagal.
-     */
     public boolean update(Notifikasi notifikasi) {
         String sql = "UPDATE notifikasi "
                    + "SET message = ?, sentAt = ?, isRead = ?, "
@@ -277,13 +198,6 @@ public class NotifikasiDAO {
         }
     }
 
-    /**
-     * Menandai satu notifikasi sebagai sudah dibaca (isRead = true).
-     * Dipanggil saat user mengklik notifikasi.
-     *
-     * @param notifId id notifikasi yang akan ditandai sudah dibaca.
-     * @return {@code true} jika berhasil, {@code false} jika gagal.
-     */
     public boolean markAsRead(int notifId) {
         String sql = "UPDATE notifikasi SET isRead = 1 WHERE notifId = ?";
 
@@ -298,13 +212,6 @@ public class NotifikasiDAO {
         }
     }
 
-    /**
-     * Menandai semua notifikasi milik satu user sebagai sudah dibaca.
-     * Dipanggil saat user menekan tombol "Tandai semua sudah dibaca".
-     *
-     * @param userId id user yang notifikasinya akan ditandai.
-     * @return {@code true} jika berhasil, {@code false} jika gagal.
-     */
     public boolean markAllAsReadByUserId(int userId) {
         String sql = "UPDATE notifikasi SET isRead = 1 WHERE userId = ? AND isRead = 0";
 
@@ -319,16 +226,8 @@ public class NotifikasiDAO {
         }
     }
 
-    // =========================================================================
     // DELETE
-    // =========================================================================
 
-    /**
-     * Menghapus notifikasi berdasarkan notifId.
-     *
-     * @param notifId id notifikasi yang akan dihapus.
-     * @return {@code true} jika berhasil, {@code false} jika gagal.
-     */
     public boolean delete(int notifId) {
         String sql = "DELETE FROM notifikasi WHERE notifId = ?";
 
@@ -343,17 +242,8 @@ public class NotifikasiDAO {
         }
     }
 
-    // =========================================================================
     // HELPER (private)
-    // =========================================================================
 
-    /**
-     * Mengubah satu baris ResultSet menjadi objek Notifikasi.
-     *
-     * @param rs ResultSet yang sedang dibaca (pointer sudah di baris yang benar).
-     * @return objek Notifikasi hasil pemetaan.
-     * @throws SQLException jika kolom tidak ditemukan.
-     */
     private Notifikasi mapRow(ResultSet rs) throws SQLException {
         Notifikasi n = new Notifikasi();
         n.setNotifId(rs.getInt("notifId"));
@@ -373,12 +263,6 @@ public class NotifikasiDAO {
         return n;
     }
 
-    /**
-     * Mengubah {@code java.util.Date} menjadi {@code java.sql.Timestamp} (boleh null).
-     *
-     * @param date tanggal yang akan dikonversi.
-     * @return Timestamp hasil konversi, atau {@code null} jika input {@code null}.
-     */
     private Timestamp toTimestamp(java.util.Date date) {
         return date != null ? new Timestamp(date.getTime()) : null;
     }

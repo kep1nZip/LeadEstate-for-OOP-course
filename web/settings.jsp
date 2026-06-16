@@ -9,7 +9,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
-        /* ── VARIABEL WARNA (sama persis dengan reminder.jsp) ── */
+        /* ── VARIABEL WARNA ── */
         :root {
             --sidebar-bg:       #0f1923;
             --sidebar-border:   #1e3040;
@@ -28,7 +28,6 @@
         }
         body { font-family: 'DM Sans', sans-serif; }
 
-        /* ── SIDEBAR dot-grid overlay (sama dengan reminder.jsp) ── */
         .sidebar-grid::before {
             content: "";
             position: absolute;
@@ -42,12 +41,10 @@
         }
         .sidebar-grid > * { position: relative; z-index: 1; }
 
-        /* ── SCROLLBAR ── */
         .scroll-thin::-webkit-scrollbar       { width: 4px; }
         .scroll-thin::-webkit-scrollbar-track { background: transparent; }
         .scroll-thin::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 10px; }
 
-        /* ── INPUT FOCUS ── */
         .finp:focus {
             outline: none;
             border-color: var(--brand-gold) !important;
@@ -55,7 +52,6 @@
             box-shadow: 0 0 0 3px rgba(201,168,76,.12);
         }
 
-        /* ── SAVE BAR ── */
         .save-bar {
             position: fixed; bottom: 0; left: 256px; right: 0;
             background: #fff; border-top: 2px solid var(--brand-gold);
@@ -65,7 +61,6 @@
         }
         .save-bar.visible { transform: translateY(0); }
 
-        /* ── TOAST ── */
         .toast {
             position: fixed; bottom: 24px; right: 24px;
             border-radius: 12px; padding: 13px 18px;
@@ -80,7 +75,6 @@
         .toast.ok          { background: #dcfce7; color: #16a34a; border: 1px solid #bbf7d0; }
         .toast.err         { background: #fee2e2; color: #dc2626; border: 1px solid #fecaca; }
 
-        /* ── MODAL ── */
         .modal-overlay {
             position: fixed; inset: 0; background: rgba(0,0,0,.55);
             display: flex; align-items: center; justify-content: center;
@@ -93,7 +87,6 @@
             box-shadow: 0 20px 60px rgba(0,0,0,.15);
         }
 
-        /* ── SETTINGS NAV (tab kiri di dalam content) ── */
         .sn-item {
             display: flex; align-items: center; gap: 9px;
             padding: 10px 12px; border-radius: 10px;
@@ -107,7 +100,6 @@
         .sn-item.sn-danger:hover { background: #fee2e2; }
         .sn-item.sn-danger.active{ background: #fee2e2; font-weight: 600; border-color: #fecaca; }
 
-        /* ── CARD ── */
         .set-card {
             background: var(--card-bg); border: 1px solid var(--border);
             border-radius: 16px; overflow: hidden; margin-bottom: 20px;
@@ -121,7 +113,6 @@
         .danger-card   { border-color: #fecaca; }
         .danger-head   { border-bottom-color: #fee2e2; }
 
-        /* ── FORM ── */
         .flbl {
             display: block; font-size: 11.5px; font-weight: 600;
             color: var(--text-secondary); letter-spacing: .03em;
@@ -136,7 +127,6 @@
         .finp:disabled { opacity: .5; cursor: not-allowed; }
         .finp::placeholder { color: var(--text-muted); }
 
-        /* ── TEAM ROW ── */
         .tim-row {
             display: flex; align-items: center; gap: 13px;
             padding: 14px 22px; border-bottom: 1px solid #f3f4f6;
@@ -165,7 +155,6 @@
             border-radius: 4px; padding: 1px 6px;
         }
 
-        /* ── DANGER ITEMS ── */
         .danger-item {
             display: flex; align-items: flex-start; justify-content: space-between;
             gap: 16px; padding: 18px 22px;
@@ -173,7 +162,6 @@
         }
         .danger-item:last-child { border-bottom: none; }
 
-        /* ── BUTTONS ── */
         .btn-outline {
             padding: 8px 16px; border-radius: 9px; font-size: 12.5px; font-weight: 600;
             border: 1.5px solid var(--border); background: transparent; color: var(--text-secondary);
@@ -249,9 +237,7 @@
 <body class="bg-[#f5f4f0] text-[#1a1a2e] overflow-hidden">
 <div class="flex h-screen overflow-hidden">
 
-    <!-- ═══════════════════════════════════════════════════════════
-         SIDEBAR — sama persis dengan reminder.jsp
-         ═══════════════════════════════════════════════════════════ -->
+    <!-- SIDEBAR — sama persis dengan reminder.jsp -->
     <aside class="sidebar-grid w-64 flex-shrink-0 flex flex-col relative overflow-hidden"
            style="background:var(--sidebar-bg); border-right:1px solid var(--sidebar-border);">
 
@@ -374,9 +360,7 @@
         </div>
     </aside>
 
-    <!-- ═══════════════════════════════════════════════════════════
-         MAIN CONTENT
-         ═══════════════════════════════════════════════════════════ -->
+    <!-- MAIN CONTENT -->
     <main class="flex-1 flex flex-col overflow-hidden">
 
         <!-- TOPBAR — sama dengan reminder.jsp -->
@@ -407,15 +391,7 @@
                     <span>👤</span> Profil Saya
                 </div>
 
-                <% if (isAdmin) { %>
-                <div class="text-[10px] font-semibold uppercase tracking-widest px-2 py-2 mt-2"
-                     style="color:var(--text-muted);">Tim</div>
-                <div class="sn-item <%= "tim".equals(activeTab) ? "active" : "" %>"
-                     onclick="switchTab('tim')">
-                    <span>👥</span> Manajemen Tim
-                </div>
-                <% } %>
-
+               
                 <div class="text-[10px] font-semibold uppercase tracking-widest px-2 py-2 mt-2"
                      style="color:var(--text-muted);">Lainnya</div>
                 <div class="sn-item sn-danger <%= "bahaya".equals(activeTab) ? "active" : "" %>"
@@ -447,9 +423,7 @@
                 </div>
                 <% } %>
 
-                <!-- ══════════════════════════════
-                     TAB: PROFIL SAYA
-                     ══════════════════════════════ -->
+                <!-- TAB: PROFIL SAYA -->
                 <div id="tab-profil" class="tab-panel" style="display:<%= "profil".equals(activeTab) ? "block" : "none" %>">
                     <div class="set-card">
 
@@ -502,9 +476,7 @@
                     </div>
                 </div>
 
-                <!-- ══════════════════════════════
-                     TAB: MANAJEMEN TIM (Admin only)
-                     ══════════════════════════════ -->
+                <!-- TAB: MANAJEMEN TIM (Admin only) -->
                 <% if (isAdmin) { %>
                 <div id="tab-tim" class="tab-panel" style="display:<%= "tim".equals(activeTab) ? "block" : "none" %>">
                     <div class="set-card">
@@ -600,9 +572,7 @@
                 </div>
                 <% } %>
 
-                <!-- ══════════════════════════════
-                     TAB: ZONA BAHAYA
-                     ══════════════════════════════ -->
+                <!-- TAB: ZONA BAHAYA -->
                 <div id="tab-bahaya" class="tab-panel" style="display:<%= "bahaya".equals(activeTab) ? "block" : "none" %>">
                     <div class="set-card danger-card">
                         <div class="set-card-head danger-head">
@@ -632,54 +602,15 @@
                             </form>
                         </div>
 
-                        <!-- Reset Data -->
-                        <div class="danger-item">
-                            <div>
-                                <div class="font-semibold text-[13.5px] mb-1">Reset Semua Data Lead</div>
-                                <div class="text-[12.5px]" style="color:var(--text-muted);">
-                                    Hapus seluruh data lead, follow up, dan reminder. Data tidak dapat dipulihkan.
-                                </div>
-                            </div>
-                            <button type="button" class="btn-outline danger"
-                                    onclick="showToast('⚠️ Fitur ini belum tersedia', true)">
-                                Reset Data
-                            </button>
-                        </div>
-
-                        <!-- Export & Hapus -->
-                        <div class="danger-item">
-                            <div>
-                                <div class="font-semibold text-[13.5px] mb-1">Export &amp; Hapus Data</div>
-                                <div class="text-[12.5px]" style="color:var(--text-muted);">
-                                    Download semua data Anda lalu hapus dari sistem sepenuhnya.
-                                </div>
-                            </div>
-                            <button type="button" class="btn-outline danger"
-                                    onclick="showToast('⚠️ Fitur ini belum tersedia', true)">
-                                Export &amp; Hapus
-                            </button>
-                        </div>
-
-                        <!-- Hapus Akun -->
-                        <div class="danger-item">
-                            <div>
-                                <div class="font-semibold text-[13.5px] mb-1">Hapus Akun Permanen</div>
-                                <div class="text-[12.5px]" style="color:var(--text-muted);">
-                                    Semua data, anggota tim, dan konfigurasi akan dihapus selamanya.
-                                </div>
-                            </div>
-                            <button type="button" class="btn-outline danger solid"
-                                    onclick="showToast('⚠️ Fitur ini belum tersedia', true)">
-                                Hapus Akun
-                            </button>
+                       
                         </div>
                     </div>
                 </div>
 
-            </div><!-- /settings-content -->
-        </div><!-- /body-split -->
+            </div>
+        </div>
     </main>
-</div><!-- /root -->
+</div>
 
 <!-- ── SAVE BAR ── -->
 <div class="save-bar" id="saveBar">

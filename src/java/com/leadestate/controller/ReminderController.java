@@ -23,32 +23,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Controller (Servlet) untuk halaman utama "Reminder & Follow-up".
- *
- * <p>Servlet ini adalah titik masuk halaman {@code /reminder} yang menampilkan
- * tiga tab (Hari Ini, Tertunda, Selesai) beserta panel detail follow-up
- * pada sisi kanan halaman.</p>
- *
- * <p>URL pattern: {@code /reminder} — aksi dibedakan via parameter
- * {@code action} pada request.</p>
- *
- * <p>Aksi yang didukung:</p>
- * <ul>
- *   <li>GET  {@code (default / tab)}   — tampilkan halaman utama reminder + tab aktif</li>
- *   <li>POST {@code batalkan}          — batalkan satu reminder (UPDATE status → Dibatalkan)</li>
- *   <li>POST {@code cekOverdue}        — cek & update reminder yang sudah overdue</li>
- * </ul>
- *
- * <p>Untuk aksi catat/edit/selesai/hapus pada follow-up, lihat
- * {@code FollowUpController.java}.</p>
- *
- * <p>Semua aksi membutuhkan user yang sudah login (cek session {@code userLogin}).
- * Jika belum login, redirect ke {@code /login}.</p>
- *
- * @author Rafa Ahmad Aulia (103012400169)
- * @version 1.0
- */
 @WebServlet("/reminder")
 public class ReminderController extends HttpServlet {
 
@@ -56,23 +30,8 @@ public class ReminderController extends HttpServlet {
     private final FollowUpDAO followUpDAO     = new FollowUpDAO();
     private final NotifikasiDAO notifikasiDAO = new NotifikasiDAO();
 
-    // =========================================================================
     // doGet — menampilkan halaman Reminder & Follow-up
-    // =========================================================================
 
-    /**
-     * Menangani HTTP GET — menampilkan halaman utama Reminder & Follow-up.
-     *
-     * <p>Menyiapkan tiga daftar sesuai tab pada mockup:</p>
-     * <ul>
-     *   <li>{@code followUpHariIni}  — tab "Hari Ini"</li>
-     *   <li>{@code followUpTertunda} — tab "Tertunda"</li>
-     *   <li>{@code followUpSelesai}  — tab "Selesai"</li>
-     * </ul>
-     *
-     * <p>Jika ada parameter {@code leadId}, panel kanan menampilkan
-     * detail follow-up untuk lead tersebut.</p>
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -136,18 +95,8 @@ public class ReminderController extends HttpServlet {
         request.getRequestDispatcher("/WEB-INF/views/reminder.jsp").forward(request, response);
     }
 
-    // =========================================================================
     // doPost — aksi ubah data
-    // =========================================================================
 
-    /**
-     * Menangani HTTP POST.
-     *
-     * <p>Routing berdasarkan parameter {@code action}:</p>
-     * <ul>
-     *   <li>{@code batalkan} — UPDATE status reminder → Dibatalkan</li>
-     * </ul>
-     */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -174,20 +123,8 @@ public class ReminderController extends HttpServlet {
         }
     }
 
-    // =========================================================================
     // HANDLER PRIVAT
-    // =========================================================================
 
-    /**
-     * Mengecek seluruh reminder di database dan mengubah status yang sudah
-     * melewati batas waktu menjadi {@code Overdue}.
-     *
-     * <p>Biasanya dipanggil via AJAX atau scheduler ringan dari halaman JSP
-     * saat halaman pertama kali dibuka. Di sini dipanggil via GET
-     * {@code ?action=cekOverdue}.</p>
-     *
-     * <p>Setelah selesai, redirect kembali ke halaman reminder.</p>
-     */
     private void cekDanUpdateOverdue(HttpServletRequest request,
                                      HttpServletResponse response)
             throws IOException {
@@ -209,12 +146,6 @@ public class ReminderController extends HttpServlet {
         response.sendRedirect(request.getContextPath() + "/reminder");
     }
 
-    /**
-     * Membatalkan satu reminder — UPDATE status menjadi {@code Dibatalkan}.
-     *
-     * <p>Membutuhkan parameter request: {@code reminderId}.</p>
-     * <p>Redirect ke halaman reminder setelah aksi selesai.</p>
-     */
     private void batalkanReminder(HttpServletRequest request,
                                   HttpServletResponse response)
             throws ServletException, IOException {
@@ -242,18 +173,8 @@ public class ReminderController extends HttpServlet {
                 + "/reminder" + (berhasil ? "?sukses=batalkan" : "?gagal=batalkan"));
     }
 
-    // =========================================================================
     // UTILITAS PRIVAT
-    // =========================================================================
 
-    /**
-     * Mengambil follow-up yang sudah selesai milik satu salesId dari database.
-     *
-     * <p>Digunakan untuk tab "Selesai" pada halaman Reminder & Follow-up.</p>
-     *
-     * @param salesId id sales yang sedang login.
-     * @return List FollowUp dengan status {@code Selesai}, terbaru di atas.
-     */
     private List<FollowUp> cariSelesaiOlehSales(int salesId) {
         List<FollowUp> semuaMilikSales = followUpDAO.findBySalesId(salesId);
         List<FollowUp> selesai = new ArrayList<>();
@@ -265,14 +186,6 @@ public class ReminderController extends HttpServlet {
         return selesai;
     }
 
-    /**
-     * Mengisi {@code daftarReminder} pada setiap FollowUp dalam daftar.
-     *
-     * <p>Dipanggil sebelum forward ke JSP agar JSP bisa menampilkan
-     * detail reminder tanpa query tambahan di layer view.</p>
-     *
-     * @param daftarFollowUp list FollowUp yang akan diisi reminder-nya.
-     */
     private void isiReminder(List<FollowUp> daftarFollowUp) {
         for (FollowUp fu : daftarFollowUp) {
             List<Reminder> reminders = reminderDAO.findByFollowupId(fu.getId());

@@ -13,7 +13,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
-        /* ── VARIABEL WARNA (diambil persis dari ReminderPage.css) ─── */
+        /* ── SIDEBAR CSS ─── */
         :root {
             --sidebar-bg:       #0f1923;
             --sidebar-border:   #1e3040;
@@ -32,7 +32,6 @@
         }
         body { font-family: 'DM Sans', sans-serif; }
 
-        /* ── SIDEBAR dot-grid overlay ── */
         .sidebar-grid::before {
             content: "";
             position: absolute;
@@ -46,18 +45,15 @@
         }
         .sidebar-grid > * { position: relative; z-index: 1; }
 
-        /* ── LEAD CARD selected ── */
         .lead-card-item.selected {
             background: #fef3cd;
             border-left: 3px solid var(--brand-gold);
         }
         .lead-card-item:hover:not(.selected) { background: #fffbf0; }
 
-        /* ── TIMELINE ── */
         .tl-seg-done    { background: #e5e7eb; }
         .tl-seg-current { background: var(--brand-gold); }
 
-        /* ── STATUS BADGE ── */
         .tag-today  { background: #dcfce7; color: #16a34a; }
         .tag-soon   { background: #fef3cd; color: #b45309; }
         .tag-late   { background: #fee2e2; color: #dc2626; }
@@ -67,21 +63,17 @@
         .sp-proses  { background: #fef3cd; color: #b45309; }
         .sp-selesai { background: #dcfce7; color: #16a34a; }
 
-        /* ── WA CHIP ── */
         .wa-chip { transition: all .15s; }
         .wa-chip.sel, .wa-chip:hover {
             background: #16a34a; color: #fff; border-color: #16a34a;
         }
 
-        /* ── SCROLLBAR ── */
         .scroll-thin::-webkit-scrollbar       { width: 4px; }
         .scroll-thin::-webkit-scrollbar-track { background: transparent; }
         .scroll-thin::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 10px; }
 
-        /* ── SEARCH FOCUS ── */
         #searchInput:focus { border-color: var(--brand-gold); background: #fff; }
 
-        /* ── TEXTAREA FOCUS ── */
         #notesArea:focus { border-color: var(--brand-gold); background: #fff; }
     </style>
 </head>
@@ -98,7 +90,7 @@
     String roleName  = userLogin.getRoleName();
     boolean isAdmin  = "Admin".equalsIgnoreCase(roleName);
 
-    /* ── Inisial avatar (maks 2 huruf) ── */
+    /* ── Inisial avatar ── */
     String[] namaParts = namaUser.trim().split("\\s+");
     StringBuilder inisialSB = new StringBuilder();
     for (int i = 0; i < Math.min(2, namaParts.length); i++) {
@@ -129,9 +121,7 @@
 
 <div class="flex h-screen overflow-hidden">
 
-    <!-- ═══════════════════════════════════════════════════════════════
-         SIDEBAR
-         ═══════════════════════════════════════════════════════════════ -->
+    <!-- SIDEBAR -->
     <aside class="sidebar-grid w-64 flex-shrink-0 flex flex-col relative overflow-hidden"
            style="background:var(--sidebar-bg); border-right:1px solid var(--sidebar-border);">
 
@@ -281,9 +271,7 @@
         </div>
     </aside>
 
-    <!-- ═══════════════════════════════════════════════════════════════
-         MAIN CONTENT
-         ═══════════════════════════════════════════════════════════════ -->
+    <!-- MAIN CONTENT -->
     <main class="flex-1 flex flex-col overflow-hidden">
 
         <!-- TOPBAR -->
@@ -724,12 +712,12 @@
                         </c:otherwise>
                     </c:choose>
                 </div>
-            </div><!-- /right-panel -->
-        </div><!-- /body-split -->
+            </div>
+        </div>
     </main>
-</div><!-- /root -->
+</div>
 
-<!-- ── Pesan sukses/gagal ── -->
+<!-- Pesan sukses/gagal -->
 <c:if test="${param.sukses != null}">
     <div id="toastSukses" class="fixed bottom-5 right-5 z-50 px-5 py-3 rounded-xl text-sm font-semibold shadow-lg"
          style="background:#16a34a; color:#fff;">

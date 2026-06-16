@@ -19,36 +19,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Controller untuk halaman Dashboard Admin.
- *
- * Menangani request ke URL /dashboard dan menyiapkan data KPI
- * yang ditampilkan di halaman utama Admin:
- * - Total Lead (semua data di tabel leads)
- * - FollowUp Hari Ini (status Pending, jadwal hari ini)
- * - Lead Tertunda (followup tertunda / overdue)
- * - Closing Bulan Ini (statusId = 5 sesuai SQL: "Closed Won")
- * - Daftar Top Sales (diurutkan berdasarkan jumlah lead)
- * - Reminder Hari Ini (followup hari ini lintas semua Sales)
- *
- * Hanya dapat diakses oleh user dengan roleId = Admin.ROLE_ID (1).
- * Sales yang mengakses URL ini akan diredirect ke /followup.
- *
- * @author Fathan Firdaus Nuzulan (103012400353)
- * @version 1.0
- */
 @WebServlet("/dashboard")
 public class DashboardController extends HttpServlet {
 
-    // =========================================================================
     // STATUS ID (sesuai data di leadestate_v2.sql — tabel lead_status)
     // id=5 "Closed Won" dianggap sebagai closing
-    // =========================================================================
     private static final int STATUS_CLOSED_WON = 5;
 
-    // =========================================================================
     // DEPENDENSI DAO
-    // =========================================================================
 
     /** DAO untuk data user dan daftar Sales. */
     private UserDAO userDAO;
@@ -59,15 +37,8 @@ public class DashboardController extends HttpServlet {
     /** DAO untuk data follow-up dan reminder hari ini. */
     private FollowUpDAO followUpDAO;
 
-    // =========================================================================
     // INISIALISASI SERVLET
-    // =========================================================================
 
-    /**
-     * Inisialisasi semua DAO saat servlet pertama kali dimuat.
-     *
-     * @throws ServletException jika terjadi error saat inisialisasi.
-     */
     @Override
     public void init() throws ServletException {
         userDAO     = new UserDAO();
@@ -75,24 +46,8 @@ public class DashboardController extends HttpServlet {
         followUpDAO = new FollowUpDAO();
     }
 
-    // =========================================================================
     // HTTP GET — Tampilkan Dashboard
-    // =========================================================================
 
-    /**
-     * Menangani GET /dashboard.
-     *
-     * Alur:
-     * 1. Cek session — pastikan user sudah login.
-     * 2. Cek role — redirect Sales ke /followup.
-     * 3. Kumpulkan semua data KPI menggunakan DAO yang tersedia.
-     * 4. Set attribute ke request dan forward ke dashboard.jsp.
-     *
-     * @param request  HTTP request dari browser.
-     * @param response HTTP response ke browser.
-     * @throws ServletException jika terjadi error servlet.
-     * @throws IOException      jika terjadi error I/O.
-     */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -181,9 +136,7 @@ public class DashboardController extends HttpServlet {
                .forward(request, response);
     }
 
-    // =========================================================================
     // HTTP POST — tidak dipakai, redirect ke GET
-    // =========================================================================
 
     /**
      * Dashboard tidak menerima POST. Redirect ke GET.

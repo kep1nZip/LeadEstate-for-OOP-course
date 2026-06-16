@@ -183,11 +183,11 @@
       </div>
     </div>
 
-  </div><!-- /card -->
+  </div>
 
   <p class="text-center text-xs text-gray-300 mt-6">&copy; 2026 LeadEstate. All rights reserved.</p>
 
-</div><!-- /max-w-md -->
+</div>
 
 <script>
   // Baca tab aktif dari attribute yang di-set AuthController saat forward kembali ke index.jsp

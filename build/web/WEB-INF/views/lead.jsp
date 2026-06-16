@@ -9,10 +9,8 @@
         <meta charset="UTF-8">
         <title>Data Lead — LeadEstate</title>
 
-        <!-- Tailwind -->
         <script src="https://cdn.tailwindcss.com"></script>
 
-        <!-- Font -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Sans:wght@300;400;500;600&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
@@ -62,7 +60,7 @@
 
         <div class="flex min-h-screen">
 
-            <!-- SIDEBAR (final — identik dengan dashboard.jsp) -->
+            <!-- SIDEBAR -->
             <aside class="sidebar-grid fixed w-64 h-screen flex flex-col overflow-hidden"
                    style="background:var(--sidebar-bg); border-right:1px solid var(--sidebar-border);">
 
@@ -158,7 +156,7 @@
                     </a>
 
                     <!-- Pengaturan -->
-                    <a href="${pageContext.request.contextPath}/settings"
+                    <a href="${pageContext.request.contextPath}/settings.jsp"
                        class="flex items-center gap-2.5 px-3.5 py-2.5 rounded-[10px] text-[13.5px] font-medium no-underline transition-all"
                        style="border:1px solid rgba(255,255,255,.08); background:rgba(255,255,255,.03); color:#7a99b2;"
                        onmouseover="this.style.background='rgba(255,255,255,.07)';this.style.color='#fff';"

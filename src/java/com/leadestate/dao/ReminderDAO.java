@@ -11,21 +11,8 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * DAO (Data Access Object) untuk kelas Reminder.
- *
- * Bertugas menjembatani objek Reminder (model) dengan tabel `reminders`
- * pada database (lihat leadestate_v2.sql).
- *
- * Kolom tabel reminders: id, followupId, reminderDate, status.
- */
 public class ReminderDAO {
 
-    /**
-     * Mengambil seluruh data reminder dari database.
-     *
-     * @return List berisi semua Reminder.
-     */
     public List<Reminder> findAll() {
         List<Reminder> daftar = new ArrayList<>();
         String sql = "SELECT id, followupId, reminderDate, status FROM reminders";
@@ -43,12 +30,6 @@ public class ReminderDAO {
         return daftar;
     }
 
-    /**
-     * Mencari satu reminder berdasarkan id.
-     *
-     * @param id id reminder.
-     * @return objek Reminder jika ditemukan, atau null jika tidak ada.
-     */
     public Reminder findById(int id) {
         String sql = "SELECT id, followupId, reminderDate, status FROM reminders WHERE id = ?";
 
@@ -67,13 +48,6 @@ public class ReminderDAO {
         return null;
     }
 
-    /**
-     * Mencari semua reminder yang terkait dengan satu followupId.
-     * Dipakai oleh FollowUp untuk mengisi daftarReminder-nya.
-     *
-     * @param followupId id follow-up terkait.
-     * @return List berisi Reminder milik follow-up tersebut.
-     */
     public List<Reminder> findByFollowupId(int followupId) {
         List<Reminder> daftar = new ArrayList<>();
         String sql = "SELECT id, followupId, reminderDate, status FROM reminders WHERE followupId = ?";
@@ -93,14 +67,6 @@ public class ReminderDAO {
         return daftar;
     }
 
-    /**
-     * Menyimpan reminder baru ke database (INSERT).
-     * id pada objek reminder akan diisi otomatis dengan id hasil
-     * generate dari database setelah berhasil disimpan.
-     *
-     * @param reminder objek Reminder yang akan disimpan (tanpa id).
-     * @return true jika berhasil, false jika gagal.
-     */
     public boolean save(Reminder reminder) {
         String sql = "INSERT INTO reminders (followupId, reminderDate, status) VALUES (?, ?, ?)";
 
@@ -126,12 +92,6 @@ public class ReminderDAO {
         return false;
     }
 
-    /**
-     * Memperbarui data reminder yang sudah ada (UPDATE berdasarkan id).
-     *
-     * @param reminder objek Reminder dengan id yang valid.
-     * @return true jika berhasil, false jika gagal.
-     */
     public boolean update(Reminder reminder) {
         String sql = "UPDATE reminders SET followupId = ?, reminderDate = ?, status = ? WHERE id = ?";
 
@@ -150,12 +110,6 @@ public class ReminderDAO {
         }
     }
 
-    /**
-     * Menghapus reminder berdasarkan id.
-     *
-     * @param id id reminder yang akan dihapus.
-     * @return true jika berhasil, false jika gagal.
-     */
     public boolean delete(int id) {
         String sql = "DELETE FROM reminders WHERE id = ?";
 
@@ -172,9 +126,6 @@ public class ReminderDAO {
 
     // ===== Helper =====
 
-    /**
-     * Mengubah satu baris ResultSet menjadi objek Reminder.
-     */
     private Reminder mapRow(ResultSet rs) throws SQLException {
         Reminder r = new Reminder();
         r.setId(rs.getInt("id"));
@@ -185,9 +136,6 @@ public class ReminderDAO {
         return r;
     }
 
-    /**
-     * Mengubah java.util.Date menjadi java.sql.Timestamp (boleh null).
-     */
     private Timestamp toTimestamp(java.util.Date date) {
         return date != null ? new Timestamp(date.getTime()) : null;
     }
