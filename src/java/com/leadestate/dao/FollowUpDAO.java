@@ -22,7 +22,8 @@ public class FollowUpDAO {
 
     public List<FollowUp> findAll() {
         List<FollowUp> daftar = new ArrayList<>();
-        String sql = "SELECT id, leadId, salesId, notes, followupDate, status FROM followups";
+        String sql = "SELECT f.id, f.leadId, f.salesId, f.notes, f.followupDate, f.status, l.name AS leadName "
+           + "FROM followups f LEFT JOIN leads l ON f.leadId = l.id";
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
@@ -38,8 +39,8 @@ public class FollowUpDAO {
     }
 
     public FollowUp findById(int id) {
-        String sql = "SELECT id, leadId, salesId, notes, followupDate, status "
-                   + "FROM followups WHERE id = ?";
+        String sql = "SELECT f.id, f.leadId, f.salesId, f.notes, f.followupDate, f.status, l.name AS leadName "
+           + "FROM followups f LEFT JOIN leads l ON f.leadId = l.id WHERE f.id = ?";
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -58,8 +59,8 @@ public class FollowUpDAO {
 
     public List<FollowUp> findByLeadId(int leadId) {
         List<FollowUp> daftar = new ArrayList<>();
-        String sql = "SELECT id, leadId, salesId, notes, followupDate, status "
-                   + "FROM followups WHERE leadId = ? ORDER BY followupDate DESC";
+        String sql = "SELECT f.id, f.leadId, f.salesId, f.notes, f.followupDate, f.status, l.name AS leadName "
+           + "FROM followups f LEFT JOIN leads l ON f.leadId = l.id WHERE f.leadId = ? ORDER BY f.followupDate DESC";
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -78,8 +79,8 @@ public class FollowUpDAO {
 
     public List<FollowUp> findBySalesId(int salesId) {
         List<FollowUp> daftar = new ArrayList<>();
-        String sql = "SELECT id, leadId, salesId, notes, followupDate, status "
-                   + "FROM followups WHERE salesId = ? ORDER BY followupDate ASC";
+        String sql = "SELECT f.id, f.leadId, f.salesId, f.notes, f.followupDate, f.status, l.name AS leadName "
+           + "FROM followups f LEFT JOIN leads l ON f.leadId = l.id WHERE f.salesId = ? ORDER BY f.followupDate ASC";
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -98,10 +99,9 @@ public class FollowUpDAO {
 
     public List<FollowUp> findHariIniOlehSales(int salesId) {
         List<FollowUp> daftar = new ArrayList<>();
-        String sql = "SELECT id, leadId, salesId, notes, followupDate, status "
-                   + "FROM followups "
-                   + "WHERE salesId = ? AND DATE(followupDate) = CURDATE() "
-                   + "ORDER BY followupDate ASC";
+        String sql = "SELECT f.id, f.leadId, f.salesId, f.notes, f.followupDate, f.status, l.name AS leadName "
+           + "FROM followups f LEFT JOIN leads l ON f.leadId = l.id "
+           + "WHERE f.salesId = ? AND DATE(f.followupDate) = CURDATE() AND f.status = 'Pending' ORDER BY f.followupDate ASC";
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -120,10 +120,9 @@ public class FollowUpDAO {
 
     public List<FollowUp> findTertundaOlehSales(int salesId) {
         List<FollowUp> daftar = new ArrayList<>();
-        String sql = "SELECT id, leadId, salesId, notes, followupDate, status "
-                   + "FROM followups "
-                   + "WHERE salesId = ? AND followupDate < NOW() AND status = 'Pending' "
-                   + "ORDER BY followupDate ASC";
+        String sql = "SELECT f.id, f.leadId, f.salesId, f.notes, f.followupDate, f.status, l.name AS leadName "
+           + "FROM followups f LEFT JOIN leads l ON f.leadId = l.id "
+           + "WHERE f.salesId = ? AND f.followupDate < NOW() AND f.status = 'Pending' ORDER BY f.followupDate ASC";
 
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -255,6 +254,12 @@ public class FollowUpDAO {
         Timestamp ts = rs.getTimestamp("followupDate");
         f.setFollowupDate(ts != null ? new java.util.Date(ts.getTime()) : null);
         f.setStatus(rs.getString("status"));
+        
+        // --- BARIS TAMBAHAN UNTUK NAMA LEAD ---
+        try {
+            f.setLeadName(rs.getString("leadName"));
+        } catch (SQLException e) { /* Abaikan jika kolom tidak ada */ }
+        
         return f;
     }
 

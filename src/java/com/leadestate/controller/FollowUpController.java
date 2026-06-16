@@ -33,7 +33,6 @@ public class FollowUpController extends HttpServlet {
     private final ReminderDAO reminderDAO = new ReminderDAO();
     private final NotifikasiDAO notifikasiDAO = new NotifikasiDAO();
 
-    // Format tanggal yang dikirim dari form JSP (input datetime-local)
     private static final String FORMAT_DATETIME = "yyyy-MM-dd'T'HH:mm";
 
     // doGet — menampilkan data (read)
@@ -124,7 +123,8 @@ public class FollowUpController extends HttpServlet {
 
         request.setAttribute("daftarFollowUp", daftar);
         request.setAttribute("leadId", leadId);
-        request.getRequestDispatcher("/WEB-INF/jsp/followup/list.jsp").forward(request, response);
+        response.sendRedirect(request.getContextPath() + "/reminder");
+        //request.getRequestDispatcher("/WEB-INF/jsp/followup/list.jsp").forward(request, response);
     }
 
     private void catatAktivitas(HttpServletRequest request,

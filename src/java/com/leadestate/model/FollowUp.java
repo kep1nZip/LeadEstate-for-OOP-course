@@ -8,14 +8,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-
 public class FollowUp {
  
     // KONSTANTA STATUS
- 
     public static final String STATUS_PENDING = "Pending";
     public static final String STATUS_DONE = "Selesai";
     public static final String STATUS_CANCELLED = "Batal";
+ 
+    // ATRIBUT (sesuai class diagram)
 
     private int id;
     private int leadId;
@@ -23,11 +23,10 @@ public class FollowUp {
     private String notes;
     private Date followupDate;
     private String status;
- 
     private List<Reminder> daftarReminder;
  
     // KONSTRUKTOR
- 
+
     public FollowUp() {
         this.status = STATUS_PENDING;
         this.daftarReminder = new ArrayList<>();
@@ -56,7 +55,6 @@ public class FollowUp {
     }
  
     // METHOD (sesuai class diagram)
-
     public void logActivity(int leadId, String note) {
         if (leadId != this.leadId) {
             System.out.println("[FollowUp] Peringatan: leadId tidak cocok. "
@@ -68,7 +66,7 @@ public class FollowUp {
             return;
         }
  
-        // Tandai catatan dengan timestamp sederhana
+        // Tandai catatan dengan timestamp
         String timestamp = new Date().toString();
         String logEntry = "[" + timestamp + "] " + note;
  
@@ -91,7 +89,7 @@ public class FollowUp {
         this.notes = newNotes;
         System.out.println("[FollowUp] Catatan berhasil diperbarui untuk followUpId=" + this.id);
     }
- 
+
     public void markAsDone() {
         this.status = STATUS_DONE;
  
@@ -105,7 +103,7 @@ public class FollowUp {
     }
  
     // METHOD TAMBAHAN (pendukung relasi & utilitas)
-
+ 
     public void tambahReminder(Reminder reminder) {
         if (reminder == null) {
             System.out.println("[FollowUp] Reminder tidak boleh null.");
@@ -187,6 +185,16 @@ public class FollowUp {
 
     public void setDaftarReminder(List<Reminder> daftarReminder) {
         this.daftarReminder = (daftarReminder != null) ? daftarReminder : new ArrayList<>();
+    }
+    
+    private String leadName;
+
+    public String getLeadName() {
+        return leadName;
+    }
+
+    public void setLeadName(String leadName) {
+        this.leadName = leadName;
     }
  
     // OVERRIDE toString()

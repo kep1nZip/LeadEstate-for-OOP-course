@@ -55,13 +55,10 @@ public class ReminderController extends HttpServlet {
         int salesId = userLogin.getId();
 
         // --- Isi tiga tab ---
-        List<FollowUp> followUpHariIni  = followUpDAO.findHariIniOlehSales(salesId);
-        List<FollowUp> followUpTertunda = followUpDAO.findTertundaOlehSales(salesId);
-        List<FollowUp> followUpSelesai  = cariSelesaiOlehSales(salesId);
-        List<FollowUp> followUpSemua = followUpDAO.findBySalesId(salesId);
-
-
-
+        List<FollowUp> followUpHariIni  = filterUnikPerLead(followUpDAO.findHariIniOlehSales(salesId));
+        List<FollowUp> followUpTertunda = filterUnikPerLead(followUpDAO.findTertundaOlehSales(salesId));
+        List<FollowUp> followUpSelesai  = filterUnikPerLead(cariSelesaiOlehSales(salesId));
+        List<FollowUp> followUpSemua    = filterUnikPerLead(followUpDAO.findBySalesId(salesId));
 
         // Isi daftarReminder tiap FollowUp (untuk ditampilkan di panel detail)
         isiReminder(followUpHariIni);
@@ -86,6 +83,11 @@ public class ReminderController extends HttpServlet {
             isiReminder(riwayatFollowUp);
             request.setAttribute("leadIdDipilih", leadId);
             request.setAttribute("riwayatFollowUp", riwayatFollowUp);
+            
+            // --- BARIS TAMBAHAN: Kirim nama ke judul panel ---
+            if (!riwayatFollowUp.isEmpty()) {
+                request.setAttribute("namaLeadDipilih", riwayatFollowUp.get(0).getLeadName());
+            }
         }
 
         // --- Badge notifikasi di header ---
@@ -191,5 +193,18 @@ public class ReminderController extends HttpServlet {
             List<Reminder> reminders = reminderDAO.findByFollowupId(fu.getId());
             fu.setDaftarReminder(reminders);
         }
+    }
+    
+    private List<FollowUp> filterUnikPerLead(List<FollowUp> daftarMentah) {
+        List<FollowUp> daftarUnik = new ArrayList<>();
+        java.util.Set<Integer> setLeadId = new java.util.HashSet<>();
+        
+        for (FollowUp fu : daftarMentah) {
+            if (!setLeadId.contains(fu.getLeadId())) {
+                daftarUnik.add(fu);
+                setLeadId.add(fu.getLeadId());
+            }
+        }
+        return daftarUnik;
     }
 }
